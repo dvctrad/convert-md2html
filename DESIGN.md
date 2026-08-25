@@ -4,8 +4,9 @@
 |------|------|
 | ドキュメント種別 | 設計書兼機能仕様書 |
 | 対象システム | convert-md2html |
+| 対象バージョン | 1.0.1 |
 | 対象読者 | 開発者・保守担当者 |
-| 関連ドキュメント | README.md（利用者向け使用方法）、docs/html-in-markdown.md（Markdown内HTML記述ガイド）、docs/theming.md（デザインカスタマイズ） |
+| 関連ドキュメント | README.md（利用者向け使用方法）、docs/html-in-markdown.md（Markdown内HTML記述ガイド）、docs/theming.md（デザインカスタマイズ）、CONTRIBUTING.md（変更提案の手引き） |
 
 ---
 
@@ -32,7 +33,7 @@
 |------|------|
 | OS | Windows 10以降 / Linux / macOS |
 | ランタイム | Node.js 14.0.0以降 |
-| ブラウザ | Microsoft Edge（Chromiumベース）推奨 |
+| ブラウザ | モダンブラウザ（Microsoft Edge、Chrome、Safari など） |
 
 ---
 
@@ -40,7 +41,7 @@
 
 ### 2.1 全体構成
 
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │                   CLI（process.argv）                │
 │          引数解析・入力パス種別判定                    │
@@ -76,13 +77,13 @@
 | `convert-md2html.js` | メインスクリプト（全処理ロジック、HTMLテンプレート、クライアントサイドJSを含む単一ファイル構成） |
 | `styles/base.css` | 生成HTMLに埋め込まれる既定スタイル（デザイントークン定義を含む） |
 | `convert-md2html.bat` | Windows用バッチラッパー（Node.jsの呼び出しを簡略化） |
-| `package.json` | 依存パッケージ定義 |
+| `convert-md2html.sh` | macOS / Linux用シェルラッパー |
+| `package.json` | パッケージ定義（依存パッケージ・`bin`・npm 公開設定） |
 | `README.md` | 利用者向け使用方法ドキュメント |
 | `docs/html-in-markdown.md` | Markdown内HTML記述のベストプラクティスガイド |
 | `docs/theming.md` | CSSによるデザインカスタマイズの手引き |
+| `CONTRIBUTING.md` | 不具合報告・Pull Requestの手引き |
 | `LICENSE` | MIT License 全文 |
-| `sample/` | 変換元サンプルファイル（Markdown/CSV） |
-| `sample_html/` | 変換後サンプルHTML出力 |
 | `mac/bin/convert-finder.sh` | macOS Finder クイックアクションのエントリポイント。Node.js 解決・出力先選択・変換ループ・通知を担う |
 | `mac/bin/notify.sh` | `osascript` で通知センター / ダイアログを表示する薄いラッパー |
 | `mac/services/Convert to HTML.workflow/` | Finder 右クリック用 Quick Action（通常変換） |
@@ -114,7 +115,7 @@
 
 ### 3.1 コマンドライン引数解析
 
-```
+```text
 process.argv
   │
   ├─ --nav / --navigation フラグ検出 → hasNavigation = true/false
@@ -132,9 +133,9 @@ process.argv
        └─ ファイル → processSingleFile()
 ```
 
-### 3.2 単一ファイル変換フロー（processSingleFile: 行198〜259）
+### 3.2 単一ファイル変換フロー（processSingleFile: 行295〜356）
 
-```
+```text
 1. 出力ディレクトリの自動作成（recursive: true）
 2. ファイルサイズチェック（0バイト → エラー終了）
 3. 拡張子判定
@@ -145,9 +146,9 @@ process.argv
 5. fs.writeFileSync() で出力
 ```
 
-### 3.3 ディレクトリ一括変換フロー（processDirectory: 行261〜359）
+### 3.3 ディレクトリ一括変換フロー（processDirectory: 行359〜457）
 
-```
+```text
 1. 出力ディレクトリの自動作成
 2. findConvertibleFiles() で .md/.csv を再帰検索
 3. --nav 指定時: collectNavigationData() でメタデータ収集
@@ -171,7 +172,7 @@ process.argv
 
 | 項目 | 内容 |
 |------|------|
-| 位置 | 行85〜121 |
+| 位置 | 行122〜158 |
 | 引数 | `csvContent` (string) — CSV形式の文字列 |
 | 戻り値 | `string[][]` — 2次元配列（行×列） |
 | 処理 | 1文字ずつ走査し、カンマ区切り・ダブルクォート囲み・エスケープクォート（`""`）に対応したCSVパーサー |
@@ -186,7 +187,7 @@ process.argv
 
 | 項目 | 内容 |
 |------|------|
-| 位置 | 行124〜157 |
+| 位置 | 行161〜194 |
 | 引数 | `csvContent` (string) — CSV形式の文字列 |
 | 戻り値 | `string` — HTMLテーブル文字列 |
 | 処理 | parseCSV()で解析後、1行目を`<thead>`、2行目以降を`<tbody>`として構造化テーブルHTMLを生成。各セル値はescapeHtml()でエスケープ |
@@ -209,7 +210,7 @@ process.argv
 
 | 項目 | 内容 |
 |------|------|
-| 位置 | 行160〜169 |
+| 位置 | 行197〜206 |
 | 引数 | `text` (string) — エスケープ対象の文字列 |
 | 戻り値 | `string` — HTMLエスケープ済み文字列 |
 | 処理 | XSS防止のため、5種の特殊文字を実体参照に置換 |
@@ -228,7 +229,7 @@ process.argv
 
 | 項目 | 内容 |
 |------|------|
-| 位置 | 行198〜259 |
+| 位置 | 行295〜356 |
 | 引数 | `inputFile` (string) — 入力ファイルパス、`outputFile` (string) — 出力ファイルパス |
 | 戻り値 | なし（ファイル出力） |
 | 処理 | 単一ファイルの変換処理。詳細は「3.2 単一ファイル変換フロー」参照 |
@@ -238,7 +239,7 @@ process.argv
 
 | 項目 | 内容 |
 |------|------|
-| 位置 | 行261〜359 |
+| 位置 | 行359〜457 |
 | 引数 | `inputDir` (string) — 入力ディレクトリパス、`outputDir` (string) — 出力ディレクトリパス |
 | 戻り値 | なし（ファイル出力） |
 | 処理 | ディレクトリ内の全変換可能ファイルを一括変換。詳細は「3.3 ディレクトリ一括変換フロー」参照 |
@@ -248,7 +249,7 @@ process.argv
 
 | 項目 | 内容 |
 |------|------|
-| 位置 | 行362〜380 |
+| 位置 | 行460〜478 |
 | 引数 | `dir` (string) — 検索対象ディレクトリパス |
 | 戻り値 | `string[]` — 変換可能ファイルの絶対パス配列 |
 | 処理 | fs.readdirSync + fs.statSync による再帰的ファイル探索。拡張子が `.md` または `.csv`（大文字小文字不問）のファイルを収集 |
@@ -257,7 +258,7 @@ process.argv
 
 | 項目 | 内容 |
 |------|------|
-| 位置 | 行382〜446 |
+| 位置 | 行481〜544 |
 | 引数 | `convertibleFiles` (string[]) — ファイルパス配列、`inputDir` (string) — 入力ディレクトリ、`outputDir` (string) — 出力ディレクトリ |
 | 戻り値 | `object` — ナビゲーションデータオブジェクト |
 | 処理 | 各ファイルからタイトルを抽出し、ディレクトリ構造を反映したツリー構造を構築 |
@@ -295,7 +296,7 @@ process.argv
 
 | 項目 | 内容 |
 |------|------|
-| 位置 | 行448〜521 |
+| 位置 | 行547〜619 |
 | 引数 | `navigationData` (object) — ナビゲーションデータ、`currentHtmlPath` (string) — 現在のHTML相対パス、`currentFile` (string) — 現在の出力ファイル絶対パス、`outputDir` (string) — 出力ディレクトリ |
 | 戻り値 | `string` — サイドバーナビゲーションHTML |
 | 処理 | ツリー構造を再帰的にHTML（`<nav>` + `<ul>`/`<li>`）に変換 |
@@ -316,7 +317,7 @@ process.argv
 
 | 項目 | 内容 |
 |------|------|
-| 位置 | 行524〜1093 |
+| 位置 | 行622〜885 |
 | 引数 | `title` (string) — ページタイトル、`content` (string) — 変換済み本文HTML、`navigationData` (object\|null) — ナビゲーションデータ、`currentFile` (string\|null) — 現在のファイルパス、`outputDir` (string\|null) — 出力ディレクトリ |
 | 戻り値 | `string` — 完全なHTML文書文字列 |
 | 処理 | HTMLテンプレートにCSS・JavaScript・ナビゲーション・コンテンツを埋め込んだ完全なHTML文書を生成 |
@@ -363,7 +364,7 @@ markdown-it-texmath プラグインにより、以下の記法をサポートす
 markdown-itのfenceレンダラーをカスタムオーバーライドし、言語名が `mermaid` のコードブロックを特別処理する。
 
 **処理フロー:**
-```
+```text
 コードブロック（```mermaid）検出
   │
   ├─ 全角スペース（U+3000）→ 半角スペース（U+0020）に正規化
@@ -395,7 +396,7 @@ markdown-itのfenceレンダラーをカスタムオーバーライドし、言�
 parseCSV関数は、1文字ずつの逐次走査方式でCSVを解析する。RFC 4180に準拠した基本的なCSV形式に対応する。
 
 **状態遷移:**
-```
+```text
 初期状態 → 文字走査ループ
   │
   ├─ " → クォートモード切替（inQuotes トグル）
@@ -662,7 +663,7 @@ setTimeout(function() {
 
 #### 9.5.4 ページ遷移処理（navigate）
 
-```
+```text
 1. fetch(url) でHTMLを取得
 2. DOMParser で解析 → .content-with-nav 要素を抽出
    └─ 要素なし → window.location.href で通常遷移にフォールバック
@@ -704,7 +705,7 @@ setTimeout(function() {
 ### 10.2 変換結果サマリー
 
 ディレクトリ変換完了時に以下を出力:
-```
+```text
 Conversion completed: {successCount} files processed successfully
 {errorCount} files failed to convert    ← エラーがある場合のみ
 ```
@@ -736,7 +737,7 @@ markdown-itの `html: true` 設定により、Markdown内に記述されたHTML�
 
 ### 12.1 呼び出しフロー
 
-```
+```text
 Finder で対象を選択 + 右クリック
     │  ファイル/フォルダの絶対パス群を渡す
     ▼

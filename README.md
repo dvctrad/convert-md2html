@@ -17,35 +17,118 @@ Markdown ファイルと CSV ファイルを、そのままブラウザで読め
 
 ## インストール
 
-```bash
-git clone <リポジトリURL> convert-md2html
-cd convert-md2html
-npm install
-```
+入手経路によって手順が変わります。
 
-`npm install` は初回のみ必要です。依存パッケージは [package.json](package.json) に記載されており、コマンドで個別に指定する必要はありません。
+| 入手方法 | 手順 |
+| --- | --- |
+| npm から入れる | [npm からインストールする](#npm-からインストールする) |
+| ZIP ファイルを受け取った・ダウンロードした | [ZIP ファイルから使う](#zip-ファイルから使う) |
+| スタイルを編集する・macOS の Finder 連携を使う | [リポジトリから利用する](#リポジトリから利用する) |
 
-Node.js が未インストールの場合は、[Node.js 公式サイト](https://nodejs.org/) から LTS 版を導入し、次のコマンドでバージョンを確認してください。
+いずれの方法でも Node.js 14.0.0 以降が必要です。未インストールの場合は、[Node.js 公式サイト](https://nodejs.org/) から LTS 版を導入し、次のコマンドで確認してください。
 
 ```bash
 node --version
 npm --version
 ```
 
+### npm からインストールする
+
+```bash
+npm install -g convert-md2html
+```
+
+`convert-md2html` コマンドがどのディレクトリからでも使えるようになります。
+
+```bash
+convert-md2html example.md example.html
+```
+
+インストールせずに 1 回だけ試すこともできます。
+
+```bash
+npx convert-md2html example.md example.html
+```
+
+### ZIP ファイルから使う
+
+配布された ZIP ファイルや、GitHub の [Releases](https://github.com/dvctrad/convert-md2html/releases) からダウンロードした ZIP を使う場合の手順です。
+
+**1. ZIP を展開する**
+
+任意のフォルダに展開してください。展開先のパスに空白や日本語が含まれていても動作します。
+
+Windows でダウンロードした ZIP は、展開する前に**ブロックを解除**してください。解除しないと、展開後のファイルが警告つきで扱われることがあります。
+
+- ZIP ファイルを右クリック → プロパティ → 全般タブ下部の「セキュリティ: このファイルは他のコンピューターから…」にある**「ブロックの解除」にチェック** → OK
+
+**2. 展開したフォルダでコマンドラインを開く**
+
+- **Windows**: エクスプローラで展開先フォルダを開き、アドレスバーに `cmd` と入力して Enter
+- **macOS / Linux**: ターミナルで `cd` して移動
+
+**3. 依存パッケージをインストールする**
+
+```bash
+npm install
+```
+
+展開したフォルダに `node_modules` フォルダが最初から含まれている場合、この手順は不要です。
+
+**4. 変換を実行する**
+
+```bash
+node convert-md2html.js example.md example.html
+```
+
+以降の使用例に出てくる `convert-md2html` は、この方法では `node convert-md2html.js` に読み替えてください。
+
+**macOS で ZIP を使う場合の追加手順**
+
+ダウンロードしたファイルには隔離属性が付くため、同梱のシェルスクリプトを実行しようとすると「開発元を検証できません」と表示されることがあります。展開先フォルダで次を実行してください。
+
+```bash
+xattr -dr com.apple.quarantine .
+```
+
+展開に使ったツールによっては実行権限が失われる場合があります。`Permission denied` と表示されたときは、あわせて次を実行してください。
+
+```bash
+chmod +x convert-md2html.sh mac/install.sh mac/uninstall.sh mac/bin/*.sh
+```
+
+**更新について**
+
+ZIP は自動では更新されません。最新版と変更点は [Releases](https://github.com/dvctrad/convert-md2html/releases) で確認し、新しい ZIP を展開し直してください。
+
+### リポジトリから利用する
+
+スタイルを直接編集したい場合や、macOS の Finder 連携を使う場合はリポジトリを取得してください。
+
+```bash
+git clone https://github.com/dvctrad/convert-md2html.git
+cd convert-md2html
+npm install
+```
+
+`npm install` は初回のみ必要です。依存パッケージは [package.json](package.json) に記載されており、コマンドで個別に指定する必要はありません。
+
+この形で使う場合、以降の例の `convert-md2html` は `node convert-md2html.js` に読み替えてください。
+
 ## 使い方
 
 ### 単一ファイルの変換
 
 ```bash
-node convert-md2html.js <入力ファイル> <出力ファイル>
+convert-md2html <入力ファイル> <出力ファイル>
 ```
 
 ```bash
-node convert-md2html.js example.md example.html
-node convert-md2html.js data.csv table.html
+convert-md2html example.md example.html
+convert-md2html data.csv table.html
 ```
 
-Windows では同梱のバッチファイルからも実行できます。
+Windows でリポジトリから利用する場合は、同梱のバッチファイルからも実行できます。
 
 ```cmd
 convert-md2html.bat example.md example.html
@@ -57,11 +140,11 @@ PowerShell から実行する場合は `.\convert-md2html.bat` のようにパ�
 ### ディレクトリの一括変換
 
 ```bash
-node convert-md2html.js <入力ディレクトリ> <出力ディレクトリ>
+convert-md2html <入力ディレクトリ> <出力ディレクトリ>
 ```
 
 ```bash
-node convert-md2html.js docs html
+convert-md2html docs html
 ```
 
 サブディレクトリも含めて再帰的に変換し、出力先のフォルダが存在しない場合は自動的に作成します。変換に失敗したファイルがあっても、残りの処理は継続します。
@@ -75,13 +158,13 @@ node convert-md2html.js docs html
 | `--css <ファイル>` | 追加の CSS を埋め込んで見た目を上書きする（複数指定可） |
 
 ```bash
-node convert-md2html.js docs html --nav --fit-tables --css theme.css
+convert-md2html docs html --nav --fit-tables --css theme.css
 ```
 
 ### ナビゲーション付きの変換
 
 ```bash
-node convert-md2html.js docs html --nav
+convert-md2html docs html --nav
 ```
 
 - 左側の固定サイドバーに、全ページへのリンクが階層表示されます
@@ -96,7 +179,7 @@ node convert-md2html.js docs html --nav
 既定では、横長の表は列幅を保ったまま横スクロールできる形で出力します。印刷などで表全体をページ幅に収めたい場合は `--fit-tables` を指定してください。
 
 ```bash
-node convert-md2html.js input.md output.html --fit-tables
+convert-md2html input.md output.html --fit-tables
 ```
 
 ### 見た目のカスタマイズ
@@ -104,7 +187,7 @@ node convert-md2html.js input.md output.html --fit-tables
 配色・フォント・余白は、`--css` で渡した CSS で上書きできます。
 
 ```bash
-node convert-md2html.js input.md output.html --css theme.css
+convert-md2html input.md output.html --css theme.css
 ```
 
 ```css
@@ -119,10 +202,11 @@ node convert-md2html.js input.md output.html --css theme.css
 
 ## macOS の Finder から実行する
 
-macOS では、Finder のクイックアクションメニューから変換できます。
+macOS では、Finder のクイックアクションメニューから変換できます。この連携はリポジトリを取得して使います。
 
 ```bash
-cd /path/to/convert-md2html
+git clone https://github.com/dvctrad/convert-md2html.git
+cd convert-md2html
 npm install     # 初回のみ
 cd mac
 ./install.sh
@@ -139,13 +223,13 @@ cd mac
 
 単一ファイルの変換:
 
-```
+```text
 Converted README.md to output.html
 ```
 
 ディレクトリの一括変換:
 
-```
+```text
 Processing directory: ./docs
 Found 3 convertible files (2 markdown, 1 csv)
 Converting: readme.md -> readme.html
@@ -161,6 +245,8 @@ Conversion completed: 3 files processed successfully
 | [Markdown 内で HTML を使う](docs/html-in-markdown.md) | Markdown に HTML を埋め込む際の書き方と注意点 |
 | [デザインのカスタマイズ](docs/theming.md) | 配色・フォント・レイアウトを CSS で変更する方法 |
 | [macOS 連携](mac/README.md) | Finder のクイックアクションから実行する設定 |
+| [コントリビューション](CONTRIBUTING.md) | 不具合報告・要望・Pull Request の手引き |
+| [設計書兼機能仕様書](DESIGN.md) | 内部構造・処理フロー・各関数の仕様 |
 
 ## ファイル構成
 
@@ -170,8 +256,11 @@ Conversion completed: 3 files processed successfully
 | `convert-md2html.bat` | Windows 用の実行スクリプト |
 | `convert-md2html.sh` | macOS / Linux 用の実行スクリプト |
 | `styles/base.css` | 生成される HTML の既定スタイル |
-| `docs/` | 各種ドキュメント |
+| `docs/` | 利用者向けの補足ドキュメント |
 | `mac/` | macOS のクイックアクション連携一式 |
+| `DESIGN.md` | 設計書兼機能仕様書 |
+
+npm パッケージ名・コマンド名はいずれも `convert-md2html` です。
 
 ## 注意事項
 
@@ -187,15 +276,19 @@ Conversion completed: 3 files processed successfully
 | 症状 | 確認すること |
 | --- | --- |
 | ファイルが見つからないというエラーが出る | 入力ファイルのパスと名前が正しいか |
-| モジュールが見つからないというエラーが出る | `npm install` を実行済みか |
+| モジュールが見つからないというエラーが出る | リポジトリから利用している場合、`npm install` を実行済みか |
+| `convert-md2html` コマンドが見つからない | `npm install -g convert-md2html` を実行済みか、npm のグローバル bin が PATH に入っているか（`npm prefix -g` で確認） |
 | 実行できない | Node.js 14.0.0 以降がインストールされているか |
+| `Error: Cannot find module 'markdown-it'` と表示される | 展開先フォルダで `npm install` を実行済みか（`node_modules` があるか） |
+| macOS で `Permission denied` と表示される | `chmod +x convert-md2html.sh mac/bin/*.sh` を実行したか |
+| macOS で「開発元を検証できません」と表示される | `xattr -dr com.apple.quarantine .` を実行したか |
 | 出力されない | 出力先フォルダに書き込み権限があるか |
 | 数式や図表が表示されない | インターネットに接続されているか（KaTeX / Mermaid は CDN 参照） |
 | HTML がそのまま文字として表示される | [Markdown 内で HTML を使う](docs/html-in-markdown.md) の記法ルール |
 
 ## サポート
 
-不具合や要望は、本リポジトリの Issue でご報告ください。
+不具合の報告や機能の要望は、本リポジトリの Issue でお知らせください。Pull Request も歓迎します。詳しくは [コントリビューション](CONTRIBUTING.md) を参照してください。
 
 ## ライセンス
 

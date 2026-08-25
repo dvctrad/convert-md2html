@@ -13,8 +13,20 @@
 ## インストール
 
 ```bash
-cd /path/to/convert-md2html
+git clone https://github.com/dvctrad/convert-md2html.git
+cd convert-md2html
 npm install            # 初回のみ
+cd mac
+./install.sh
+```
+
+ZIP を展開して使う場合は、展開先フォルダで先に隔離属性の解除と実行権限の付与を行ってください。
+
+```bash
+cd /path/to/convert-md2html      # 展開先フォルダ
+xattr -dr com.apple.quarantine .
+chmod +x convert-md2html.sh mac/install.sh mac/uninstall.sh mac/bin/*.sh
+npm install                      # node_modules が同梱されていない場合
 cd mac
 ./install.sh
 ```
@@ -101,7 +113,7 @@ nvm 利用時に違うパスにある場合は、`mac/bin/convert-finder.sh` の
 
 ## ファイル構成
 
-```
+```text
 mac/
 ├── README.md                                ... このドキュメント
 ├── install.sh                               ... ~/Library/Services/ へ配置

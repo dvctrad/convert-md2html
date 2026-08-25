@@ -17,19 +17,19 @@
 ## --css オプションの使い方
 
 ```bash
-node convert-md2html.js input.md output.html --css theme.css
+convert-md2html input.md output.html --css theme.css
 ```
 
 ディレクトリ一括変換や他のオプションと併用できます。
 
 ```bash
-node convert-md2html.js ./docs ./html --nav --fit-tables --css theme.css
+convert-md2html ./docs ./html --nav --fit-tables --css theme.css
 ```
 
 複数指定した場合は、指定した順に埋め込まれます（後のファイルが優先されます）。
 
 ```bash
-node convert-md2html.js input.md output.html --css base-brand.css --css project.css
+convert-md2html input.md output.html --css base-brand.css --css project.css
 ```
 
 `--css=theme.css` の形式でも指定できます。指定したファイルが読み込めない場合、変換は実行されずエラー終了します。
@@ -104,7 +104,7 @@ node convert-md2html.js input.md output.html --css base-brand.css --css project.
 ```
 
 ```bash
-node convert-md2html.js input.md output.html --css brand.css
+convert-md2html input.md output.html --css brand.css
 ```
 
 ## 例 2: 見出しの装飾を変える

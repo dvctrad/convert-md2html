@@ -443,7 +443,7 @@ HTML ブロックの前に空行がないか、行頭にスペースが入って
 このガイドの例を試すには、Markdown ファイルを作成して変換し、ブラウザで開きます。
 
 ```bash
-node convert-md2html.js example.md example.html
+convert-md2html example.md example.html
 
 # ブラウザで開く
 start example.html      # Windows
