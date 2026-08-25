@@ -1,0 +1,41 @@
+{
+  "name": "convert-md2html",
+  "version": "1.0.0",
+  "description": "Markdown・CSV ファイルを整形された HTML に変換するコマンドラインツール",
+  "license": "MIT",
+  "author": "Digital Value Consulting Inc.",
+  "bin": {
+    "convert-md2html": "convert-md2html.js"
+  },
+  "main": "convert-md2html.js",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "files": [
+    "convert-md2html.js",
+    "convert-md2html.bat",
+    "convert-md2html.sh",
+    "styles/",
+    "mac/",
+    "docs/",
+    "LICENSE",
+    "README.md"
+  ],
+  "keywords": [
+    "markdown",
+    "csv",
+    "html",
+    "converter",
+    "mermaid",
+    "katex"
+  ],
+  "dependencies": {
+    "github-slugger": "^1.5.0",
+    "katex": "^0.16.45",
+    "markdown-it": "^14.1.0",
+    "markdown-it-anchor": "^9.2.0",
+    "markdown-it-mermaid": "^0.2.5",
+    "markdown-it-texmath": "^1.0.0",
+    "prismjs": "^1.29.0"
+  }
+}
