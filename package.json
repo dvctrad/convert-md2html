@@ -1,6 +1,6 @@
 {
   "name": "convert-md2html",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Markdown・CSV ファイルを整形された HTML に変換するコマンドラインツール",
   "license": "MIT",
   "author": "Digital Value Consulting Inc.",

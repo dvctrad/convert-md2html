@@ -205,6 +205,12 @@ function escapeHtml(text) {
   return text.replace(/[&<>"']/g, function(m) { return map[m]; });
 }
 
+// 入力ファイルの読み込み関数
+// 先頭のBOM(U+FEFF)を取り除く。BOMが残ると `^#` の見出し抽出やCSVの先頭列名が壊れる
+function readTextFile(filePath) {
+  return fs.readFileSync(filePath, 'utf-8').replace(/^\uFEFF/, '');
+}
+
 // コマンドライン引数の解析
 const args = process.argv.slice(2);
 const hasNavigation = args.includes('--nav') || args.includes('--navigation');
@@ -311,7 +317,7 @@ function processSingleFile(inputFile, outputFile) {
 
     const fileExtension = path.extname(inputFile).toLowerCase();
     console.log(`Reading file: ${inputFile} (${stats.size} bytes)`);
-    const fileContent = fs.readFileSync(inputFile, 'utf-8');
+    const fileContent = readTextFile(inputFile);
     let content, title;
 
     if (fileExtension === '.md') {
@@ -408,7 +414,7 @@ function processDirectory(inputDir, outputDir) {
 
       // ファイルを変換
       console.log(`Reading file: ${relativePath} (${stats.size} bytes)`);
-      const fileContent = fs.readFileSync(inputFile, 'utf-8');
+      const fileContent = readTextFile(inputFile);
       let content, title;
 
       if (fileExtension === '.md') {
@@ -495,7 +501,7 @@ function collectNavigationData(convertibleFiles, inputDir, outputDir) {
       
       if (fileExtension === '.md') {
         // Markdownファイルを読み込んでタイトルを抽出
-        const markdown = fs.readFileSync(inputFile, 'utf-8');
+        const markdown = readTextFile(inputFile);
         const titleMatch = markdown.match(/^#\s+(.+)$/m);
         title = titleMatch ? titleMatch[1] : path.basename(inputFile, '.md');
       } else if (fileExtension === '.csv') {
